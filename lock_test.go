@@ -59,6 +59,19 @@ func TestDeadPid(t *testing.T) {
 	}
 }
 
+func TestUnlock(t *testing.T) {
+	path := newLockfilePath()
+	if err := Lock(path); err != nil {
+		t.Error(err)
+	}
+	if err := Unlock(path); err != nil {
+		t.Error(err)
+	}
+	if err := Lock(path); err != nil {
+		t.Error(err)
+	}
+}
+
 func newLockfilePath() string {
 	return testTmpDir + "/lockfile-" + strconv.Itoa(rand.Int())
 }

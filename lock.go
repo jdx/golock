@@ -22,6 +22,10 @@ var ErrBusy = errors.New("Locked by other process")
 // an existing lockfile
 var ErrReadingLockfile = errors.New("Error reading lockfile")
 
+// ErrNotOwner means there was an attempt to unlock a lockfile
+// that was not owned by the current process
+var ErrNotOwner = errors.New("Process does not own lockfile")
+
 // Lock will attempt to grab a lock file at path
 // it will wait until it becomes available
 func Lock(path string) error {
@@ -36,6 +40,18 @@ func Lock(path string) error {
 			return err
 		}
 	}
+}
+
+// Unlock will release the lock on a file if it is the owner of it
+func Unlock(path string) error {
+	pid, err := readLockfile(path)
+	if err != nil {
+		return err
+	}
+	if pid != os.Getpid() {
+		return ErrNotOwner
+	}
+	return os.Remove(path)
 }
 
 func tryLock(path string, mypid int) error {
