@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strconv"
 	"syscall"
 	"time"
@@ -96,6 +97,7 @@ func readLockfile(path string) (pid int, err error) {
 }
 
 func writeLockfile(path string, pid int) error {
+	os.MkdirAll(filepath.Dir(path), 0755)
 	data := []byte(strconv.Itoa(pid))
 	return ioutil.WriteFile(path, data, 0666)
 }
