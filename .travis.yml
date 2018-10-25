@@ -4,7 +4,7 @@ go:
   - 1.6
 
 install:
-  - go get -v -u github.com/golang/lint/golint
+  - go get -v -u golang.org/x/lint/golint
   - go get -v
   - go build -v ./...
 
